@@ -4,7 +4,10 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
-####
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Function to load user credentials from CSV file
 def load_user_credentials():
@@ -76,49 +79,6 @@ def login():
         else:
             st.error("Invalid username or password")
             return False, None
-    return False, None
-
-# Function to handle property rental and maintenance selection
-def handle_rental_maintenance_selection():
-    st.title("Choose Option")
-    option = st.radio("Choose an option:", ("Rental + Maintenance", "Maintenance Only"))
-    if option == "Rental + Maintenance":
-        st.write("You chose Rental + Maintenance")
-        handle_property_details()
-    elif option == "Maintenance Only":
-        st.write("You chose Maintenance Only")
-        handle_property_details()
-
-# Function to handle input of property details
-def handle_property_details():
-    st.title("Property Details")
-    st.subheader("Address Details")
-    country = st.text_input("Country")
-    state = st.text_input("State")
-    city = st.text_input("City")
-    town = st.text_input("Town")
-    address = st.text_area("Address")
-
-    st.subheader("Property Description")
-    square_meter = st.number_input("Total Square Meter", min_value=0)
-    num_bedrooms = st.number_input("Number of Bedrooms", min_value=0)
-    equipped = st.checkbox("Equipped")
-    exceptional_property = st.checkbox("Exceptional Property")
-    has_swimming_pool = st.checkbox("Has Swimming Pool")
-    has_party_hall = st.checkbox("Has Party Hall")
-
-    st.write("You entered the following property details:")
-    st.write(f"Country: {country}")
-    st.write(f"State: {state}")
-    st.write(f"City: {city}")
-    st.write(f"Town: {town}")
-    st.write(f"Address: {address}")
-    st.write(f"Total Square Meter: {square_meter}")
-    st.write(f"Number of Bedrooms: {num_bedrooms}")
-    st.write(f"Equipped: {equipped}")
-    st.write(f"Exceptional Property: {exceptional_property}")
-    st.write(f"Has Swimming Pool: {has_swimming_pool}")
-    st.write(f"Has Party Hall: {has_party_hall}")
 
 # Main function to run the Streamlit application
 def main():
@@ -132,43 +92,10 @@ def main():
 
     if session_state.registered:
         st.write("Please login with your new credentials.")
-        login_successful, username = login()
+        login_successful, _ = login()
         if login_successful:
             st.success("Login successful!")
             session_state.registered = False
-            handle_rental_maintenance_selection()
-
-def save_property_details(property_details):
-    with open('property_details.csv', 'a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(property_details)
-
-# Function to handle input of property details
-def handle_property_details():
-    st.title("Property Details")
-    st.subheader("Address Details")
-    country = st.text_input("Country")
-    state = st.text_input("State")
-    city = st.text_input("City")
-    town = st.text_input("Town")
-    address = st.text_area("Address")
-
-    st.subheader("Property Description")
-    square_meter = st.number_input("Total Square Meter", min_value=0)
-    num_bedrooms = st.number_input("Number of Bedrooms", min_value=0)
-    equipped = st.checkbox("Equipped")
-    exceptional_property = st.checkbox("Exceptional Property")
-    has_swimming_pool = st.checkbox("Has Swimming Pool")
-    has_party_hall = st.checkbox("Has Party Hall")
-
-    if st.button("Save Property Details"):
-        property_details = [country, state, city, town, address, square_meter, num_bedrooms, equipped, exceptional_property, has_swimming_pool, has_party_hall]
-        save_property_details(property_details)
-        st.success("Property details saved successfully!")
-
-# Main function to run the Streamlit application
-def main():
-    handle_property_details()
 
 if __name__ == "__main__":
     main()
